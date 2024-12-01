@@ -10,9 +10,8 @@ const App = () => {
   const { movies, loading } = useFetchMovies();
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [filter, setFilter] = useState('');
-  const [sortKey, setSortKey] = useState<'release_date' | 'episode_id'>('release_date');
+  const [sortKey, setSortKey] = useState<'release_date' | 'episode_id' | 'average_rating'>('release_date');
 
-  // Filtered and sorted movies
   const filteredMovies = useMemo(() => {
     let result = movies.filter((movie) =>
       movie.title.toLowerCase().includes(filter.toLowerCase())
@@ -22,6 +21,9 @@ const App = () => {
       result.sort((a, b) => new Date(a.release_date).getTime() - new Date(b.release_date).getTime());
     } else if (sortKey === 'episode_id') {
       result.sort((a, b) => a.episode_id - b.episode_id);
+    } 
+    else if (sortKey === 'average_rating') {
+      result.sort((a, b) => parseFloat(b.averageRating || '0') - parseFloat(a.averageRating || '0'));
     }
 
     return result;
